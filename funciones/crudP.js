@@ -1,8 +1,5 @@
-const btnrfs = document.getElementById('refresh');
-btnrfs.addEventListener('click',()=>{
-  cargar();
-});
 
+cargar();
 function cargar(){
   let queri= 'select * from padre'
   url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
@@ -67,61 +64,111 @@ btninsert.addEventListener('click', ()=>{
     const valid = txtid.value;
     const txtnom = document.getElementById('nombre');
     const valnom = txtnom.value;
-    let queri= `insert into padre (id, nom) values (${valid},"${valnom}")`;
-    alert(queri)
+    //campos vacios
+    if(valid==""){
+      alert("Ingresa un id");
+    }else if(valnom==""){
+      alert("Ingresa nombre");
+    }else{
+      //ver si el id está repetido
+      let queri= `SELECT id from padre WHERE id = ${valid}`;
     // Agrega el parámetro 'query' a la URL como una cadena de consulta
-url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+    url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
 
-fetch(url)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if(data.lenght>0){
+          //Si no está insertar
+          let queri= `insert into padre (id, nom) values (${valid},"${valnom}")`;
+          alert(queri)
+          // Agrega el parámetro 'query' a la URL como una cadena de consulta
+          url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+
+          fetch(url)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              txtid.value = "";
+              txtnom.value="";
+              cargar();
+            })
+            .catch(error => {
+              console.error('Error al obtener datos:', error);
+            });
+            }else{
+              alert("id ya existe");
+            }
+      })
+      .catch(error => {
+        console.error('Error al obtener datos:', error);
+      });
     }
-    return response.json();
-  })
-  .then(data => {
-    //Aca hacer las cosas necesarias con data
-    console.log("hola desde lo q sea");
-    // console.log(data);
-    // console.log(data[0].id);
-    txtid.value = "";
-    txtnom.value="";
-    cargar();
-  })
-  .catch(error => {
-    console.error('Error al obtener datos:', error);
-  });
+
 });
 const btnupd = document.getElementById('update');
 btnupd.addEventListener('click',()=>{
     const txtid = document.getElementById('ident');
     const valid = txtid.value;
     const txtnom = document.getElementById('nombre');
-    const valnom = txtnom.value;
-    let queri= `UPDATE padre SET id = ${valid}, nom = '${valnom}' WHERE id = ${valid}`;
-    
-    alert(queri)
-    // Agrega el parámetro 'query' a la URL como una cadena de consulta
-url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+    var valnom = txtnom.value;
+    //si el id está vacio mandar alerta
+    if(valid==""){
+      alert("Es necesario un id");
+    }else if(valnom==""){
+      alert("Digita un nombre");
+    }else{
+      //ver si el id existe
+      let queri= `SELECT id FROM padre WHERE id = ${valid}`;
+      // Agrega el parámetro 'query' a la URL como una cadena de consulta
+      url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log(data.lenght);
+          if(data.lenght>0){
+            //Si no esta mandar alerta
+            alert("Este id no existe");
+          }else{
+            //Insertar
+            let queri= `UPDATE padre SET id = ${valid}, nom = '${valnom}' WHERE id = ${valid}`;
+            alert(queri)
+            // Agrega el parámetro 'query' a la URL como una cadena de consulta
+            url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
 
-fetch(url)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+            fetch(url)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+                }
+                return response.json();
+              })
+              .then(data => {
+                txtid.value = "";
+                txtnom.value="";
+                cargar();
+              })
+              .catch(error => {
+                console.error('Error al obtener datos:', error);
+              });
+          }
+        })
+        .catch(error => {
+          console.error('Error al obtener datos:', error);
+        });
     }
-    return response.json();
-  })
-  .then(data => {
-    //Aca hacer las cosas necesarias con data
-    console.log("hola desde lo q sea");
-    // console.log(data);
-    // console.log(data[0].id);
-    //Refrescar la página
-    txtid.value = "";
-    txtnom.value="";
-    cargar();
-  })
-  .catch(error => {
-    console.error('Error al obtener datos:', error);
-  });
 });

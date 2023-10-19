@@ -1,7 +1,8 @@
-const btnrfs = document.getElementById('refresh');
-btnrfs.addEventListener('click',()=>{
-    cargar();
-  });
+cargar();
+// const btnrfs = document.getElementById('refresh');
+// btnrfs.addEventListener('click',()=>{
+//     cargar();
+//   });
   function cargar(){
     let queri= 'select * from hijo'
     url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
@@ -68,117 +69,196 @@ btnupd.addEventListener('click',()=>{
     const txtnom = document.getElementById('nombre');
     const valnom = txtnom.value;
     const txthijod = document.getElementById('idpadre');
-    const valhijod = txthijod.value;
-    let queri= `UPDATE hijo SET id = ${valid}, nom = '${valnom}', hijo_de ${valhijod} WHERE id = ${valid}`;
-    
-    alert(queri)
-    // Agrega el parámetro 'query' a la URL como una cadena de consulta
-url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
-
-fetch(url)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => {
-    //Aca hacer las cosas necesarias con data
-    txtid.value = "";
-    txtnom.value="";
-    cargar();
-  })
-  .catch(error => {
-    console.error('Error al obtener datos:', error);
-  });
-});
-const btninsert = document.getElementById('insertar');
-btninsert.addEventListener('click', ()=>{
-    var keyid = true;
-    var keypapa=false;
-    const txtid = document.getElementById('ident');
-    const valid = txtid.value;
-    const txtnom = document.getElementById('nombre');
-    const valnom = txtnom.value;
-    const txthijod = document.getElementById('idpadre');
     var valhijod = txthijod.value;
-    //Para el caso que no tenga papá
-    if (valhijod == ""){
-        valhijod = 'NULL';
-        keypapa=true;
+    //Siempre tiene que haber un código
+    if(valhijod==""){
+      valhijod='NULL';
     }
-    //validar si el id no está repetido
-    if (valid == ""){
-        alert("Valor id no valido");
-        keyid=false;
+    if(valid==""){
+      alert("Es necesario un id");
+    }else if (valnom == ""){
+      alert("Es necesario un nombre");
     }else{
-        let queri = `SELECT id FROM hijo where id = ${valid}`;
-        url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
-        fetch(url)
+      //ver si el id se ecunetra en la bd
+      let queri= `select id from hijo where id = ${valid}`;
+      // Agrega el parámetro 'query' a la URL como una cadena de consulta
+      url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+
+      fetch(url)
         .then(response => {
-            if (!response.ok) {
+          if (!response.ok) {
             throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
-            }
-            return response.json();
+          }
+          return response.json();
         })
         .then(data => {
-            if(data.length== 0){
-                keyid = true;
+          //Si no está mandar una alerta
+          if(data.length == 0){
+            alert("Id no existe");
+          }else{
+            //Si no es nulo comprobar si el hijo de está en la bd
+            if(valhijod !=='NULL'){
+              let queri= `SELECT id FROM padre WHERE id = ${valhijod}`;
+              // Agrega el parámetro 'query' a la URL como una cadena de consulta
+              url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+
+              fetch(url)
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+                  }
+                  return response.json();
+                })
+                .then(data => {
+                  //si no se encontró dato mandar alerta, sino ya correr el update
+                  if(data.length==0){
+                    alert("Este padre no existe, digita uno correcto o ninguno");
+                  }else{
+                    let queri= `UPDATE hijo SET id = ${valid}, nom = '${valnom}', hijo_de = ${valhijod} WHERE id = ${valid}`;
+                    alert(queri)
+                    // Agrega el parámetro 'query' a la URL como una cadena de consulta
+                    url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+
+                    fetch(url)
+                      .then(response => {
+                        if (!response.ok) {
+                          throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+                        }
+                        return response.json();
+                      })
+                      .then(data => {
+                        //Aca hacer las cosas necesarias con data
+                        txtid.value = "";
+                        txtnom.value="";
+                        txthijod.value="";
+                        cargar();
+                      })
+                      .catch(error => {
+                        console.error('Error al obtener datos:', error);
+                      });
+                  }
+                })
+                .catch(error => {
+                  console.error('Error al obtener datos:', error);
+                });
             }else{
-                alert("Id ya existe")
+              let queri= `UPDATE hijo SET id = ${valid}, nom = '${valnom}', hijo_de = ${valhijod} WHERE id = ${valid}`;
+              alert(queri)
+              // Agrega el parámetro 'query' a la URL como una cadena de consulta
+              url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+
+              fetch(url)
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+                  }
+                  return response.json();
+                })
+                .then(data => {
+                  //Aca hacer las cosas necesarias con data
+                  txtid.value = "";
+                  txtnom.value="";
+                  txthijod.value="";
+                  cargar();
+                })
+                .catch(error => {
+                  console.error('Error al obtener datos:', error);
+                });
             }
+            
+          }
         })
         .catch(error => {
-            console.error('Error al obtener datos:', error);
-    });
-    }
-    //validar si el id del papá existe, ya el caso nulos está controlado
-    if(keyid == true && keypapa== false){
-        queri= `SELECT hijo_de from hijo WHERE hijo_de = ${valhijod}`;
-        url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
-        fetch(url)
-        .then(response => {
-            if (!response.ok) {
-            throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if(data.length== 0){
-                keypapa = false;
-                alert("Este padre no existe")
-            }else{
-                keypapa=true;
-            }
-        })
-        .catch(error => {
-            console.error('Error al obtener datos:', error);
+          console.error('Error al obtener datos:', error);
         });
     }
-    //Si las dos llaves son correctas ejecutar ya el insert 
-    if(keyid==true && keypapa==true){
-        queri= `insert into hijo (id, nom, hijo_de) values (${valid},"${valnom}",${valhijod})`;
-    alert(queri)
-    // Agrega el parámetro 'query' a la URL como una cadena de consulta
-    url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
-
-    fetch(url)
-    .then(response => {
-        if (!response.ok) {
-        throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        //Aca hacer las cosas necesarias con data
-        console.log("hola desde lo q sea");
-        txtid.value = "";
-        txtnom.value="";
-        cargar();
-    })
-    .catch(error => {
-        console.error('Error al obtener datos:', error);
-    });
-    } 
+    
 });
+const btninsert = document.getElementById('insertar');
+btninsert.addEventListener('click', () => {
+  const txtid = document.getElementById('ident');
+  const valid = txtid.value;
+  const txtnom = document.getElementById('nombre');
+  var valnom = txtnom.value;
+  const txthijod = document.getElementById('idpadre');
+  var valhijod = txthijod.value;
+
+  // Para el caso que no tenga papá
+  if (valhijod == "") {
+      valhijod = 'NULL';
+  }
+  // Validar si el id no está repetido
+  if (valid == "") {
+      alert("Valor id no valido");
+    } else if (valnom === "") { // Verificar si valnom está vacío
+      alert("Por favor, digita un nombre");
+  } else {
+      let keyid = false; // Mover keyid aquí
+      let queri = `SELECT id FROM hijo where id = ${valid}`;
+      url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+      fetch(url)
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+              }
+              return response.json();
+          })
+          .then(data => {
+              if (data.length == 0) {
+                  keyid = true; // Establecer keyid en true aquí
+              } else {
+                  alert("Id ya existe");
+              }
+
+              // Validar si el id del papá existe, ya el caso nulo está controlado
+              if (keyid && valhijod !== 'NULL') {
+                  queri = `SELECT id from padre WHERE id = ${valhijod}`;
+                  url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+                  fetch(url)
+                      .then(response => {
+                          if (!response.ok) {
+                              throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+                          }
+                          return response.json();
+                      })
+                      .then(data => {
+                          if (data.length == 0) {
+                              alert("Este padre no existe");
+                          } else {
+                               // Si las dos llaves son correctas, ejecutar el insert
+                               let queri = `INSERT INTO hijo (id, nom, hijo_de) VALUES (${valid}, "${valnom}", ${valhijod})`;
+                               url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
+ 
+                               fetch(url)
+                                   .then(response => {
+                                       if (!response.ok) {
+                                           throw new Error(`Error en la respuesta de la solicitud: ${response.status}`);
+                                       }
+                                       return response.json();
+                                   })
+                                   .then(data => {
+                                       // Aca hacer las cosas necesarias con data
+                                       txtid.value = "";
+                                       txtnom.value = "";
+                                       txthijod.value="";
+                                       cargar();
+                                   })
+                                   .catch(error => {
+                                       console.error('Error al obtener datos:', error);
+                                   });
+                            
+                             
+                          }
+                      })
+                      .catch(error => {
+                          console.error('Error al obtener datos:', error);
+                      });
+              }
+          })
+          .catch(error => {
+              console.error('Error al obtener datos:', error);
+          });
+  }
+});
+
 
