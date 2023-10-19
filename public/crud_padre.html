@@ -4,25 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crud Padre</title>
+    <style>
+        /* Estilos para el diseño */
+        body {
+            display: flex;
+        }
+        .left-section {
+            flex: 1;
+            padding: 20px;
+            margin-right: 10px; /* Ajusta el margen derecho */
+        }
+        .right-section {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-left: 10px; /* Ajusta el margen izquierdo */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>CRUD padre</h1>
-    <div>
-        <p>ID</p>
-        <input type="text" id="ident">
+    <div class="left-section">
+        <h1>CRUD padre</h1>
+        <div>
+            <p>ID</p>
+            <input type="number" min="0" inputmode="numeric" id="ident">
+        </div>
+        <div>
+            <p>Nombre</p>
+            <input type="text" id="nombre">
+        </div>
+        <div>
+            <button id="insertar">Insertar</button>
+            <button id="update">Actualizar</button>
+        </div>
     </div>
-    
-    
-    <div>
-        <p>Nombre</p>
-        <input type="text" id="nombre">
-
+    <div class="right-section">
+        <h2>Datos de padres</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Llenar la tabla con datos dinámicamente si es necesario -->
+            </tbody>
+        </table>
+        <button id="refresh">Refrescar</button>
     </div>
-    <div>
-        <button id="insertar">Insertar</button>
-        <button id="update">Actualiar</button>
-    </div>
-    <!--Usar el archivo js con que se van a ejecutar funciones-->
     <script src="../funciones/crudP.js"></script>
 </body>
 </html>
