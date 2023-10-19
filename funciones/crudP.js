@@ -3,7 +3,6 @@ btnrfs.addEventListener('click',()=>{
   cargar();
 });
 
-
 function cargar(){
   let queri= 'select * from padre'
   url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
@@ -62,8 +61,6 @@ function eliminarRegistro(id) {
       console.error('Error al eliminar el registro:', error);
     });
 }
-
-
 const btninsert = document.getElementById('insertar');
 btninsert.addEventListener('click', ()=>{
     const txtid = document.getElementById('ident');
@@ -95,7 +92,6 @@ fetch(url)
     console.error('Error al obtener datos:', error);
   });
 });
-
 const btnupd = document.getElementById('update');
 btnupd.addEventListener('click',()=>{
     const txtid = document.getElementById('ident');

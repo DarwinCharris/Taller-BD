@@ -38,7 +38,7 @@ const pool = mysql.createPool({
 //   });
 app.get('/api/data', (req, res) => {
   let query = req.query.query;
-  console.log(query)
+  //console.log(query)
   let data = [];
   pool.execute(query, (error, results) => {
     if (error) {
@@ -47,7 +47,7 @@ app.get('/api/data', (req, res) => {
       return;
     }
     data.push(results)
-    console.log(results)
+    //console.log(results)
     res.json(results);
   });
 });
