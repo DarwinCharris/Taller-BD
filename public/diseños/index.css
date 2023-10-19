@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+ol {
+    background-color: #fff;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+li {
+    list-style: decimal; /* Utiliza números en lista */
+    margin: 10px 0;
+}
+
+a {
+    text-decoration: none;
+    color: #007BFF; /* Cambia el color de los enlaces a azul */
+    font-weight: normal; /* Restaura el peso de la fuente a normal */
+}
+
+a:hover {
+    color: #0056b3; /* Cambia el color al hacer hover */
+}
+
+ul {
+    margin: 10px 0 0 20px;
+    list-style: disc; 
+}
+
+ul li {
+    margin: 5px 0;
+    
+}
