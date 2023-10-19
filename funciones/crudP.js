@@ -1,4 +1,3 @@
-
 const btninsert = document.getElementById('insertar');
 btninsert.addEventListener('click', ()=>{
     const txtid = document.getElementById('ident');
@@ -8,7 +7,7 @@ btninsert.addEventListener('click', ()=>{
     let queri= `insert into padre (id, nom) values (${valid},"${valnom}")`;
     alert(queri)
     // Agrega el parámetro 'query' a la URL como una cadena de consulta
-url = `http://localhost:3004/api/data?query=${encodeURIComponent(queri)}`;
+url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
 
 fetch(url)
   .then(response => {
@@ -39,7 +38,7 @@ btnupd.addEventListener('click',()=>{
     
     alert(queri)
     // Agrega el parámetro 'query' a la URL como una cadena de consulta
-url = `http://localhost:3004/api/data?query=${encodeURIComponent(queri)}`;
+url = `http://localhost:3001/api/data?query=${encodeURIComponent(queri)}`;
 
 fetch(url)
   .then(response => {

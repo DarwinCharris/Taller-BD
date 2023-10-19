@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors'); // Importa el paquete cors
 const mysql = require('mysql2');
+const path = require('path');
 //Conectar la base de datos 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -41,7 +42,8 @@ app.get('/api/data', (req, res) => {
       });
   }
 });
-const PORT = 3004;
+app.use('/funciones', express.static(path.join(__dirname, 'funciones')));
+const PORT = 3001;
 //Usa la información del html
 app.use(express.static('public'));
 //Abrir la página
